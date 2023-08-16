@@ -1,3 +1,7 @@
+// To parse this JSON data, do
+//
+//     final welcome = welcomeFromJson(jsonString);
+
 import 'dart:convert';
 
 LoginResponseModel welcomeFromJson(String str) => LoginResponseModel.fromJson(json.decode(str));
@@ -6,136 +10,84 @@ String welcomeToJson(LoginResponseModel data) => json.encode(data.toJson());
 
 class LoginResponseModel {
   LoginResponseModel({
-    this.userdata,
-    this.currentPlants,
-    this.allAssignedPlants,
-    this.allMenus,
-    this.res,
+    this.statusCode,
     this.status,
     this.message,
+    this.data,
   });
 
-  List<User>? userdata;
-  List<Plant>? currentPlants;
-  List<Plant>? allAssignedPlants;
-  List<AllMenu>? allMenus;
-  String? res;
+  int? statusCode;
   bool? status;
   String? message;
+  User? data;
 
   factory LoginResponseModel.fromJson(Map<String, dynamic> json) => LoginResponseModel(
-    userdata: List<User>.from(json["userdata"].map((x) => User.fromJson(x))),
-    currentPlants: List<Plant>.from(json["current_plants"].map((x) => Plant.fromJson(x))),
-    allAssignedPlants: List<Plant>.from(json["all_assigned_plants"].map((x) => Plant.fromJson(x))),
-    allMenus: List<AllMenu>.from(json["all_menus"].map((x) => AllMenu.fromJson(x))),
-    res: json["res"],
+    statusCode: json["statusCode"],
     status: json["status"],
     message: json["message"],
+    data: User.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "userdata": userdata == null ? [] : List<dynamic>.from(userdata!.map((x) => x.toJson())),
-    "current_plants": currentPlants == null ? [] : List<dynamic>.from(currentPlants!.map((x) => x.toJson())),
-    "all_assigned_plants": allAssignedPlants == null ? [] : List<dynamic>.from(allAssignedPlants!.map((x) => x.toJson())),
-    "all_menus": allMenus == null ? [] :  List<dynamic>.from(allMenus!.map((x) => x.toJson())),
-    "res": res,
+    "statusCode": statusCode,
     "status": status,
     "message": message,
-  };
-}
-
-class Plant {
-  Plant({
-    this.companyId,
-    this.bussinessId,
-    this.plantId,
-    this.name,
-  });
-
-  int? companyId;
-  int? bussinessId;
-  int? plantId;
-  String? name;
-
-  factory Plant.fromJson(Map<String, dynamic> json) => Plant(
-    companyId: json["company_id"],
-    bussinessId: json["bussiness_id"],
-    plantId: json["plant_id"],
-    name: json["name"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "company_id": companyId,
-    "bussiness_id": bussinessId,
-    "plant_id": plantId,
-    "name": name,
-  };
-}
-
-class AllMenu {
-  AllMenu({
-    this.menuId,
-    this.menuName,
-    this.menuLink,
-    this.menuIcon,
-  });
-
-  int? menuId;
-  String? menuName;
-  String? menuLink;
-  String? menuIcon;
-
-  factory AllMenu.fromJson(Map<String, dynamic> json) => AllMenu(
-    menuId: json["menu_id"],
-    menuName: json["menu_name"],
-    menuLink: json["menu_link"],
-    menuIcon: json["menu_icon"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "menu_id": menuId,
-    "menu_name": menuName,
-    "menu_link": menuLink,
-    "menu_icon": menuIcon,
+    "data": data?.toJson(),
   };
 }
 
 class User {
   User({
-    this.username,
-    this.sessionName,
-    this.id,
     this.groupId,
-    this.groupName,
-    this.title,
-    this.loggedIn,
+    this.erpId,
+    this.firstName,
+    this.lastName,
+    this.emailAddress,
+    this.dialCode,
+    this.countryCode,
+    this.contactNo,
+    this.designation,
+    this.profileComplete,
+    this.status,
   });
 
-  String? username;
-  String? sessionName;
-  int? id;
   int? groupId;
-  String? groupName;
-  String? title;
-  int? loggedIn;
+  String? erpId;
+  String? firstName;
+  String? lastName;
+  String? emailAddress;
+  String? dialCode;
+  String? countryCode;
+  String? contactNo;
+  String? designation;
+  int? profileComplete;
+  int? status;
 
   factory User.fromJson(Map<String, dynamic> json) => User(
-    username: json["username"],
-    sessionName: json["session_name"],
-    id: json["id"],
     groupId: json["group_id"],
-    groupName: json["group_name"],
-    title: json["title"],
-    loggedIn: json["logged_in"],
+    erpId: json["erp_id"],
+    firstName: json["first_name"],
+    lastName: json["last_name"],
+    emailAddress: json["email_address"],
+    dialCode: json["dial_code"],
+    countryCode: json["country_code"],
+    contactNo: json["contact_no"],
+    designation: json["designation"],
+    profileComplete: json["profile_complete"],
+    status: json["status"],
   );
 
   Map<String, dynamic> toJson() => {
-    "username": username,
-    "session_name": sessionName,
-    "id": id,
     "group_id": groupId,
-    "group_name": groupName,
-    "title": title,
-    "logged_in": loggedIn,
+    "erp_id": erpId,
+    "first_name": firstName,
+    "last_name": lastName,
+    "email_address": emailAddress,
+    "dial_code": dialCode,
+    "country_code": countryCode,
+    "contact_no": contactNo,
+    "designation": designation,
+    "profile_complete": profileComplete,
+    "status": status,
   };
 }

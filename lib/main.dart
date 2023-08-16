@@ -7,6 +7,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:inspection_app/utility/common_methods.dart';
 import 'controllers/app_binding/app_binding_controllers.dart';
 import 'controllers/general_controller.dart';
+import 'modules/dashboard/dashboard_screen.dart';
 import 'modules/login/login_introducation_view.dart';
 import 'modules/splash/splash_screen.dart';
 import 'theme/theme_service.dart';
@@ -72,11 +73,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
       GeneralController.to.isDarkMode.value = ThemeService().loadThemeFromBox();
     });
     Timer(const Duration(seconds: 4), () {
-      // if (getIsLogin()) {
-      //   Get.off(() => const CommonDashboard());
-      // } else {
+      if (getIsLogin()) {
+        Get.off(() => const DashboardScreen());
+      } else {
         Get.off(() => const LoginIntroductionView());
-      // }
+      }
     });
     super.initState();
   }

@@ -4,10 +4,10 @@ import 'package:inspection_app/utility/assets_utility.dart';
 
 import '../../common_widgets/common_textfield.dart';
 import '../../common_widgets/common_widget.dart';
+import '../../controllers/authentication_controller.dart';
 import '../../utility/color_utility.dart';
 import '../../utility/constants.dart';
 import '../../utility/screen_utility.dart';
-import '../dashboard/dashboard_screen.dart';
 import '../forgot_password/forgot_password_view.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -38,7 +38,14 @@ class _LoginScreenState extends State<LoginScreen> {
               context: context,
               title: "Log In",
               tapOnButton: (){
-                Get.to(() => const DashboardScreen());
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save();
+                  Map<String, dynamic> params = {
+                    "email_address": userNameController.text,
+                    "password": passwordController.text,
+                  };
+                  AuthenticationController.to.loginAPI(params);
+                }
               },
               isLoading: false
           ),
@@ -110,6 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
           ],
-        ));
+        )
+    );
   }
 }

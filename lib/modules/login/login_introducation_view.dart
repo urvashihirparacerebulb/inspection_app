@@ -30,7 +30,7 @@ class _LoginIntroductionViewState extends State<LoginIntroductionView> {
                 },
                 style: ElevatedButton.styleFrom(
                   shadowColor: blackColor.withOpacity(0.8),
-                  primary: whiteColor,
+                  backgroundColor: whiteColor,
                   shape: RoundedRectangleBorder(borderRadius: commonButtonBorderRadius),
                   padding: const EdgeInsets.symmetric(vertical: 15),
                   elevation: 5.0,

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:get/get.dart';
+import 'package:inspection_app/controllers/inspection_controller.dart';
 import 'package:inspection_app/utility/color_utility.dart';
 import 'package:inspection_app/utility/screen_utility.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
 import '../../common_widgets/common_widget.dart';
+import '../../model/inspection_response_model.dart';
 import '../../utility/assets_utility.dart';
 import 'inspection_detail_view.dart';
 
@@ -19,6 +21,12 @@ class InspectionHistoryView extends StatefulWidget {
 class _InspectionHistoryViewState extends State<InspectionHistoryView> {
 
   bool isCompleted = false;
+
+  @override
+  void initState() {
+    InspectionController.to.fetchInProgressInspectionList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,15 +97,25 @@ class _InspectionHistoryViewState extends State<InspectionHistoryView> {
                             ],
                           ),
                         ))
-                      ],
+                      ]
                     ),
 
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 7,
-                      itemBuilder: (context, index) {
-                       return isCompleted ?  completedView(index: index) : inProgressView(index: index);
-                    },)
+                    Obx(() => InspectionController.to.isInspectionLoading.value ? const Center(
+                      child: CircularProgressIndicator(),
+                    ) : isCompleted ? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: InspectionController.to.completedInspectionList.length,
+                        itemBuilder: (context, index) {
+                          return completedView(index: index,inspectionForm: InspectionController.to.completedInspectionList[index]);
+                        }
+                    ) : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: InspectionController.to.inProgressInspectionList.length,
+                        itemBuilder: (context, index) {
+                          return inProgressView(index: index,inspectionForm: InspectionController.to.inProgressInspectionList[index]);
+                        }
+                    )
+                    )
                   ],
                 ),
               ],
@@ -106,7 +124,7 @@ class _InspectionHistoryViewState extends State<InspectionHistoryView> {
     );
   }
 
-  Widget completedView({int? index}){
+  Widget completedView({int? index, InspectionForm? inspectionForm}){
     return SwipeActionCell(
       key: ObjectKey(index),
       trailingActions: <SwipeAction>[
@@ -137,16 +155,16 @@ class _InspectionHistoryViewState extends State<InspectionHistoryView> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    commonHeaderTitle(title: "Form Number 01",fontWeight: 3,fontSize: 1.2,isChangeColor: true,color: blackColor),
+                    commonHeaderTitle(title: "${inspectionForm?.formName}",fontWeight: 3,fontSize: 1.25,isChangeColor: true,color: blackColor),
                     const Icon(Icons.error,color: primaryColor)
                   ],
                 ),
                 commonVerticalSpacing(spacing: 15),
-                commonHeaderTitle(title: "BGD400000",fontWeight: 1,fontSize: 0.75,isChangeColor: true,color: subFontColor),
+                commonHeaderTitle(title: "${inspectionForm?.formNumber}",fontWeight: 1,fontSize: 0.75,isChangeColor: true,color: subFontColor),
                 commonVerticalSpacing(spacing: 8),
-                commonHeaderTitle(title: "Model: 349",fontWeight: 1,fontSize: 0.75,isChangeColor: true,color: subFontColor),
+                commonHeaderTitle(title: "Model: ${inspectionForm?.modelNo}",fontWeight: 1,fontSize: 0.75,isChangeColor: true,color: subFontColor),
                 commonVerticalSpacing(spacing: 8),
-                commonHeaderTitle(title: "Inspection Date: 6/07/20 | 9:48pm",fontWeight: 1,fontSize: 0.75,isChangeColor: true,color: subFontColor),
+                commonHeaderTitle(title: "Inspection Date: ${inspectionForm?.inspectionDate} | ${inspectionForm?.inspectionTime}",fontWeight: 1,fontSize: 0.75,isChangeColor: true,color: subFontColor),
                 commonVerticalSpacing(spacing: 5),
               ],
             ),
@@ -156,7 +174,7 @@ class _InspectionHistoryViewState extends State<InspectionHistoryView> {
     );
   }
 
-  Widget inProgressView({int? index}){
+  Widget inProgressView({int? index, InspectionForm? inspectionForm}){
     return InkWell(
       onTap: (){
         Get.to(() => const InspectionDetailView());
@@ -177,7 +195,7 @@ class _InspectionHistoryViewState extends State<InspectionHistoryView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      commonHeaderTitle(title: "Form Number 01",fontWeight: 3,fontSize: 1.25,isChangeColor: true,color: blackColor),
+                      commonHeaderTitle(title: "${inspectionForm?.formName}",fontWeight: 3,fontSize: 1.25,isChangeColor: true,color: blackColor),
                       commonVerticalSpacing(),
                       commonHeaderTitle(title: "Daily",fontWeight: 2,fontSize: 0.75,isChangeColor: true,color: subFontColor),
                     ],
@@ -193,11 +211,11 @@ class _InspectionHistoryViewState extends State<InspectionHistoryView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      commonHeaderTitle(title: "BGD400000",fontWeight: 2,fontSize: 0.75,isChangeColor: true,color: subFontColor),
+                      commonHeaderTitle(title: "${inspectionForm?.formNumber}",fontWeight: 2,fontSize: 0.75,isChangeColor: true,color: subFontColor),
                       commonVerticalSpacing(spacing: 8),
-                      commonHeaderTitle(title: "Model: 349",fontWeight: 2,fontSize: 0.75,isChangeColor: true,color: subFontColor),
+                      commonHeaderTitle(title: "Model:  ${inspectionForm?.modelNo}",fontWeight: 2,fontSize: 0.75,isChangeColor: true,color: subFontColor),
                       commonVerticalSpacing(spacing: 8),
-                      commonHeaderTitle(title: "Inspection Date: 6/07/20 | 9:48pm",fontWeight: 2,fontSize: 0.75,isChangeColor: true,color: subFontColor)
+                      commonHeaderTitle(title: "Inspection Date: ${inspectionForm?.inspectionDate} |  ${inspectionForm?.inspectionTime}",fontWeight: 2,fontSize: 0.75,isChangeColor: true,color: subFontColor)
                     ],
                   ),
                   commonHorizontalSpacing(),
@@ -206,16 +224,15 @@ class _InspectionHistoryViewState extends State<InspectionHistoryView> {
                     lineWidth: 5.0,
                     animation: true,
                     percent: 0.25,
-                    center: const Text(
-                      "25%",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
+                    center: Text(
+                      "${inspectionForm?.formCompleted}",
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
                     ),
                     circularStrokeCap: CircularStrokeCap.round,
                     progressColor: primaryColor,
                   ),
                 ],
               ),
-
               commonVerticalSpacing(spacing: 5),
             ],
           ),
